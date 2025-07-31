@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-title">📋 Active Leads</div>
+
+{% if leads %}
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Date Added</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lead in leads %}
+        <tr>
+            <td>{{ lead.name }}</td>
+            <td>{{ lead.phone }}</td>
+            <td>{{ lead.created_at.strftime('%d-%b-%Y %I:%M %p') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+    <p>No leads uploaded yet 🚫</p>
+    <p><a href="/upload-leads">Upload leads here</a></p>
+</div>
+{% endif %}
+{% endblock %}

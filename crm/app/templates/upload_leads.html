@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2 class="title">📤 Upload Your Leads</h2>
+
+  <form action="/upload-leads" method="post" enctype="multipart/form-data" class="upload-form">
+    <label for="file" class="upload-label">
+      <span>Choose Excel File (.xlsx)</span>
+      <input type="file" name="file" id="file" accept=".xlsx" required>
+    </label>
+
+    <button type="submit" class="upload-btn">Upload</button>
+  </form>
+
+  <p class="hint">Excel should contain two columns: <strong>name</strong> and <strong>phone</strong>.</p>
+</div>
+{% endblock %}
