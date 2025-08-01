@@ -1,64 +1,48 @@
-<!-- app/templates/dashboard.html -->
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Dashboard - BrokerBuddy</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body class="dashboard-body">
-<button onclick="toggleDarkMode()" class="dark-mode-btn">🌓</button>
-  <div class="sidebar">
-    <h2>🏡 BrokerBuddy</h2>
-    <ul>
-      <li><a href="#">📈 Trends</a></li>
-      <li><a href="#">🎯 Lead Conversions</a></li>
-      <li><a href="/upload-leads">📤 Upload Leads</a></li>
-      <li><a href="/active-leads">📋 Active Leads</a></li>
-      <li><a href="#">👥 Agents</a></li>
-    </ul>
-  </div>
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-body">
+
+
   <div class="main-content">
-    <h1>Welcome, {{ user.username.capitalize() }}</h1>
-    <div class="card">
-      <h2>Lead Conversion Trends</h2>
-             <canvas id="leadChart" width="600" height="300"></canvas>
-       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-       <script>
-         const ctx = document.getElementById('leadChart').getContext('2d');
-         new Chart(ctx, {
-           type: 'bar',
-           data: {
-             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-             datasets: [{
-               label: 'Leads',
-               data: [12, 19, 9, 17, 15],
-               backgroundColor: '#ff7eb3'
-             }]
-           },
-           options: {
-             scales: {
-               y: { beginAtZero: true }
-             }
-           }
-         });
-       </script>
-      <p>Charts and stats will go here...</p>
-    </div>
+    <h2 class="page-title">👋 Welcome, {{ user.username.capitalize() }}</h2>
+
+      <div class="card">
+        <h2>📊 Lead Conversion Trends</h2>
+          <h3 class="text-xl font-semibold mt-8 mb-4">Daily Lead Conversions</h3>
+          <div class="chart-wrapper">
+          <canvas id="conversionChart" width="350" height="150"></canvas>
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script>
+            const labels = {{ chart_data.labels | tojson }};
+            const data = {{ chart_data.data | tojson }};
+
+            const ctx = document.getElementById("conversionChart").getContext("2d");
+            new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: "Converted Leads",
+                  data: data,
+                  borderColor: "rgb(75, 192, 192)",
+                  tension: 0.2,
+                  fill: true,
+                  backgroundColor: "rgba(75, 192, 192, 0.2)"
+                }]
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { display: false }
+                }
+              }
+            });
+          </script>
+          <p class="hint">Weekly overview of leads handled.</p>
+          {% endblock %}
+
+        <p class="hint">Weekly overview of leads handled.</p>
+      </div>
   </div>
-</body>
-</html>
-
-<script>
-  function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem("darkMode", document.body.classList.contains('dark-mode'));
-  }
-
-  // Apply mode on load
-  window.onload = function () {
-    if (localStorage.getItem("darkMode") === "true") {
-      document.body.classList.add("dark-mode");
-    }
-  }
-</script>
+</div>

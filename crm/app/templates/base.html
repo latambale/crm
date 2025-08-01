@@ -4,9 +4,31 @@
   <meta charset="UTF-8">
   <title>BrokerBuddy</title>
   <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  {% block content %}
-  {% endblock %}
+  <div class="top-bar transparent">
+    <div class="top-left"><a href="/dashboard" class="brand-link">🏡 BrokerBuddy</a></div>
+    <div class="top-right"><a href="/logout" class="logout-button">⬅️ Logout</a></div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>📊 Menu</h2>
+      <ul>
+        <li><a href="#">📈 Trends</a></li>
+        <li><a href="#">🎯 Lead Conversions</a></li>
+        <li><a href="/dashboard">🏠 Dashboard</a></li>
+        <li><a href="/upload-leads">📤 Upload Leads</a></li>
+        <li><a href="/active-leads">📋 Active Leads</a></li>
+        <li><a href="/agents">👥 Agents</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-wrapper fade-in">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
 </body>
 </html>

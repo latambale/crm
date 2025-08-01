@@ -1,43 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="page-title">📋 My Assigned Leads</div>
-
-{% if leads %}
-<table>
-    <thead>
+<div class="agents-overview-container">
+  <h2 class="page-title">📋 My Assigned Leads</h2>
+  <div class="table-wrapper">
+    {% if leads %}
+    <table class="table styled-table">
+      <thead>
         <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Status</th>
-            <th>Action</th>
+          <th>👤 Name</th>
+          <th>📞 Phone</th>
+          <th>📌 Status</th>
+          <th>⚡ Action</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for lead in leads %}
         <tr>
-            <td>{{ lead.name }}</td>
-            <td>{{ lead.phone }}</td>
-            <td>{{ lead.status or "Unconverted" }}</td>
-            <td>
-                {% if lead.status != "converted" %}
-                <form method="post" action="/convert-lead/{{ lead.id }}">
-                    <select name="property_type" required>
-                        <option disabled selected>Choose Property</option>
-                        <option value="apartment">Apartment</option>
-                        <option value="villa">Villa</option>
-                        <option value="plot">Plot</option>
-                    </select>
-                    <button type="submit">Convert</button>
-                </form>
-                {% else %}
-                ✅ Lead Converted to Sell
-                {% endif %}
-            </td>
+          <td>{{ lead.name }}</td>
+          <td>{{ lead.phone }}</td>
+          <td>
+            {% if lead.status == "converted" %}
+              <span style="color: #00b894; font-weight: bold;">✅ Converted</span>
+            {% else %}
+              <span style="color: #ff7675; font-weight: bold;">⏳ Waiting</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if lead.status != "converted" %}
+            <form method="post" action="/convert-lead/{{ lead.id }}" style="display: flex; flex-direction: row; align-items: center; gap: 1rem;">
+              <div>
+                <select name="property_type" required class="input-field" style="max-width: 180px;">
+                  <option disabled selected>Choose Property</option>
+                  <option value="apartment">🏢 Apartment</option>
+                  <option value="villa">🏠 Villa</option>
+                  <option value="plot">📐 Plot</option>
+                </select>
+              </div>
+              <div>
+                <button type="submit" class="bubbly-button">Convert</button>
+              </div>
+            </form>
+            {% else %}
+              <span style="color: #00b894; font-weight: bold;">Lead Converted</span>
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No leads assigned yet.</p>
-{% endif %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <p>No leads assigned yet 📭</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

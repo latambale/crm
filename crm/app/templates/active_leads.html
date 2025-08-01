@@ -2,14 +2,24 @@
 
 {% block content %}
 <div class="page-title">📋 Active Leads</div>
-
+<form method="get" action="/active-leads" class="mb-4">
+  <label for="status">Filter by status:</label>
+  <select name="status" id="status" onchange="this.form.submit()">
+    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+    <option value="converted" {% if status_filter == 'converted' %}selected{% endif %}>Converted</option>
+    <option value="unconverted" {% if status_filter == 'unconverted' %}selected{% endif %}>Unconverted</option>
+    <option value="waiting" {% if status_filter == 'waiting' %}selected{% endif %}>Waiting</option>
+  </select>
+</form>
 {% if leads %}
 <table class="styled-table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Date Added</th>
+            <th>👤Name</th>
+            <th>📞Phone</th>
+            <th>⚡Status</th>
+            <th>👤Assigned Agent</th>
+            <th>📋Date Added</th>
         </tr>
     </thead>
     <tbody>
@@ -17,7 +27,9 @@
         <tr>
             <td>{{ lead.name }}</td>
             <td>{{ lead.phone }}</td>
-            <td>{{ lead.created_at.strftime('%d-%b-%Y %I:%M %p') }}</td>
+            <td>{{ lead.status or "waiting" }}</td>
+            <td>{{ lead.assigned_to or "Unassigned" }}</td>
+            <td>{{ lead.created_at.strftime('%d-%b-%Y') }}</td>
         </tr>
         {% endfor %}
     </tbody>

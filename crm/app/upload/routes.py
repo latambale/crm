@@ -1,13 +1,9 @@
-from fastapi import UploadFile, File, Depends
+from fastapi import UploadFile, File, Depends, APIRouter
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from app.db import get_db
-from app.models import Lead
 import pandas as pd
 import io
-from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
-from app.utils.templates import templates
 from app.models import User, Lead
 
 router = APIRouter()
@@ -32,4 +28,3 @@ async def upload_leads(file: UploadFile = File(...), db: Session = Depends(get_d
 
     db.commit()
     return RedirectResponse(url="/active-leads", status_code=302)
-

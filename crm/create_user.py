@@ -4,13 +4,17 @@ from app.models import User
 
 db = SessionLocal()
 
-new_user = User(
-    username="agent4",
-    email="agent4@example.com",
-    password="agent",
-    role="agent"
-)
+users = [
+    {"username": "agent1", "email": "agent1@example.com", "password": "agent", "role": "agent", "status": "active"},
+    {"username": "agent2", "email": "agent2@example.com", "password": "agent", "role": "agent", "status": "active"},
+    {"username": "agent3", "email": "agent3@example.com", "password": "agent", "role": "agent", "status": "inactive"},
+    {"username": "agent4", "email": "agent4@example.com", "password": "agent", "role": "agent", "status": "active"},
+    {"username": "admin",  "email": "admin@example.com",  "password": "admin", "role": "admin", "status": "active"},
+]
 
-db.add(new_user)
+for user_data in users:
+    user = User(**user_data)
+    db.add(user)
+
 db.commit()
 db.close()

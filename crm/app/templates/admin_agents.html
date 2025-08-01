@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="agents-overview-container">
+  <h2 class="page-title">Agents Performance</h2>
+
+  <!-- First Table -->
+  <div class="table-wrapper" style="margin-bottom: 2rem;">
+    <table class="table styled-table">
+      <thead>
+        <tr>
+          <th>👤 Username</th>
+          <th>📧 Email</th>
+          <th>📋 Total Leads</th>
+          <th>✅ Converted</th>
+          <th>📊 Conversion Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for agent in agents %}
+        <tr>
+          <td>{{ agent.username }}</td>
+          <td>{{ agent.email }}</td>
+          <td>{{ agent.total_leads }}</td>
+          <td>{{ agent.converted_leads }}</td>
+          <td class="conversion-rate">{{ agent.conversion_rate }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Second Table: Manage Agents -->
+  <h2 class="page-title">Manage Agents</h2>
+  <div class="table-wrapper" >
+    <table class="table styled-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for agent in agents %}
+        <tr>
+          <td>{{ agent.username }}</td>
+          <td>{{ agent.email }}</td>
+          <td>
+            <form method="post" action="/admin/agents/update_status" class="inline-form">
+              <input type="hidden" name="agent_id" value="{{ agent.id }}">
+              <select name="status" onchange="this.form.submit()" class="form-select-sm">
+                <option value="Active" {% if agent.status == 'Active' %}selected{% endif %}>Active</option>
+                <option value="On Hold" {% if agent.status == 'On Hold' %}selected{% endif %}>On Hold</option>
+                <option value="Deactivated" {% if agent.status == 'Deactivated' %}selected{% endif %}>Deactivated</option>
+              </select>
+            </form>
+          </td>
+          <td>
+            <a href="/admin/agents/edit/{{ agent.id }}" class="btn btn-sm btn-primary">Edit</a>
+            {% if agent.status == 'Deactivated' %}
+              <a href="/admin/agents/delete/{{ agent.id }}" class="btn btn-sm btn-danger ml-2">Delete</a>
+            {% else %}
+              <span class="text-muted ml-2">Deactivate to delete</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="/admin/agents/new" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">➕ Add New Agent</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-wrapper fade-in">
+  <div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2 class="page-title">➕ Add New Agent</h2>
+    <form method="post" action="/admin/agents/new" class="upload-form">
+
+      <div>
+        <input
+          type="text"
+          name="username"
+          placeholder="Enter username"
+          required
+          class="input-field"
+        />
+      </div>
+
+      <div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter email address"
+          required
+          class="input-field"
+        />
+      </div>
+
+      <div>
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          required
+          class="input-field"
+        />
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+        <button type="submit" class="bubbly-button">Create Agent</button>
+        <a href="/admin/agents" class="logout-button">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
