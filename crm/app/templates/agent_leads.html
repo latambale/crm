@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title">📋 My Assigned Leads</div>
+
+{% if leads %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lead in leads %}
+        <tr>
+            <td>{{ lead.name }}</td>
+            <td>{{ lead.phone }}</td>
+            <td>{{ lead.status or "Unconverted" }}</td>
+            <td>
+                {% if lead.status != "converted" %}
+                <form method="post" action="/convert-lead/{{ lead.id }}">
+                    <select name="property_type" required>
+                        <option disabled selected>Choose Property</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="villa">Villa</option>
+                        <option value="plot">Plot</option>
+                    </select>
+                    <button type="submit">Convert</button>
+                </form>
+                {% else %}
+                ✅ Lead Converted to Sell
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No leads assigned yet.</p>
+{% endif %}
+{% endblock %}

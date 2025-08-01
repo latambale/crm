@@ -5,9 +5,10 @@ from app.models import User
 db = SessionLocal()
 
 new_user = User(
-    username="saurabh",
-    email="saurabh@example.com",
-    password="Latambale@1999"  # Ideally hash it
+    username="agent4",
+    email="agent4@example.com",
+    password="agent",
+    role="agent"
 )
 
 db.add(new_user)

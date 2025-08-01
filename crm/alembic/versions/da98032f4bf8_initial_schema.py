@@ -1,8 +1,8 @@
-"""Add status, assigned_to, property_type to Lead and role to User
+"""Initial schema
 
-Revision ID: f0a4462266d7
+Revision ID: da98032f4bf8
 Revises: 
-Create Date: 2025-08-01 01:23:58.150163
+Create Date: 2025-08-01 10:16:50.461083
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f0a4462266d7'
+revision: str = 'da98032f4bf8'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -36,10 +36,10 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('phone', sa.String(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('assigned_to', sa.Integer(), nullable=True),
     sa.Column('status', sa.String(), nullable=True),
     sa.Column('property_type', sa.String(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['assigned_to'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
