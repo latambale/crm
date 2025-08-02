@@ -1,72 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="main-wrapper p-6 fade-in">
-  <h2 class="text-2xl font-bold text-center mb-6">🎯 Lead Distribution Campaign</h2>
+<div class="main-wrapper fade-in">
 
-  <form method="post" action="/campaign/assign" class="bg-white shadow-xl rounded-2xl p-6 space-y-4 max-w-4xl mx-auto">
+  <h2 class="page-title">🎯 Lead Distribution Campaign</h2>
+
+  <form method="post" action="/campaign/assign" class="card space-y-6">
     <input type="hidden" name="filename" value="{{ filename }}">
 
-    <!-- Mode Toggle -->
-    <div class="flex justify-center gap-4 mb-4">
+    <!-- Toggle: Distribution Mode -->
+    <div class="flex justify-center gap-6">
       <label class="flex items-center gap-2">
         <input type="radio" name="mode" value="count" checked class="accent-indigo-600">
-        <span class="text-sm font-semibold">By Count</span>
+        <span class="text-sm font-medium">📦 By Count</span>
       </label>
       <label class="flex items-center gap-2">
         <input type="radio" name="mode" value="percentage" class="accent-indigo-600">
-        <span class="text-sm font-semibold">By Percentage</span>
+        <span class="text-sm font-medium">📊 By Percentage</span>
       </label>
     </div>
 
     <!-- Agent Distribution Inputs -->
-    <div class="grid md:grid-cols-2 gap-4">
+    <div class="grid md:grid-cols-2 gap-5">
       {% for agent in agents %}
-        <div class="flex items-center justify-between border p-3 rounded-lg shadow-sm bg-gray-50">
+        <div class="flex items-center justify-between bg-gradient-to-r from-[#f9f9ff] to-[#edf0f7] p-4 rounded-2xl shadow hover:shadow-md transition">
           <div>
             <div class="font-semibold text-indigo-700">{{ agent.username }}</div>
             <div class="text-sm text-gray-600">{{ agent.email }}</div>
           </div>
-          <div>
-            <input
-              type="number"
-              name="agent_{{ agent.id }}"
-              min="0"
-              value="0"
-              step="1"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-              class="input input-sm w-24 border rounded-md text-center shadow-sm"
-              placeholder="0">
-          </div>
+          <input
+            type="number"
+            name="agent_{{ agent.id }}"
+            min="0"
+            value="0"
+            step="1"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            class="input-field w-24 text-center shadow-sm"
+            placeholder="0"
+          >
         </div>
       {% endfor %}
     </div>
 
-    <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 mt-6 rounded-xl text-lg hover:opacity-90 transition">
-      🚀 Assign Leads
-    </button>
+    <!-- Submit Button -->
+    <div class="text-center">
+      <button type="submit" class="bubbly-button w-full">
+        🚀 Assign Leads
+      </button>
+    </div>
   </form>
 
-  <!-- Lead Preview -->
-  <div class="mt-10 max-w-4xl mx-auto">
-    <h3 class="text-xl font-semibold mb-2">📋 Uploaded Leads Preview</h3>
-    <div class="overflow-auto rounded-xl shadow">
-      <table class="min-w-full bg-white text-sm border">
-        <thead class="bg-indigo-100 text-indigo-800">
+  <!-- Uploaded Leads Preview -->
+  <div class="mt-10 card">
+    <h3 class="text-xl font-semibold mb-4 text-center text-indigo-800">📋 Uploaded Leads Preview</h3>
+
+    {% if leads %}
+    <div class="table-wrapper">
+      <table class="styled-table">
+        <thead>
           <tr>
-            <th class="py-2 px-4 border">Name</th>
-            <th class="py-2 px-4 border">Phone</th>
+            <th>Name</th>
+            <th>Phone</th>
           </tr>
         </thead>
         <tbody>
           {% for lead in leads %}
-          <tr class="hover:bg-indigo-50 transition">
-            <td class="py-2 px-4 border">{{ lead.Name }}</td>
-            <td class="py-2 px-4 border">{{ lead.Phone }}</td>
+          <tr>
+            <td>{{ lead.Name }}</td>
+            <td>{{ lead.Phone }}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+    {% else %}
+    <div class="empty-state">
+      No leads found. <a href="/upload">Upload again</a>
+    </div>
+    {% endif %}
   </div>
+
 </div>
 {% endblock %}
