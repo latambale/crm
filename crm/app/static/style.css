@@ -10,41 +10,66 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .login-container {
   background: white;
   border-radius: 2rem;
   padding: 3rem;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
+  animation: popUp 0.4s ease-out;
+}
+
+@keyframes popUp {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .app-title {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #333;
+  color: #4f46e5;
+  font-weight: bold;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .input-field {
-  display: block;
-  width: 100%;
-  padding: 0.8rem;
-  margin-bottom: 1rem;
-  border: none;
-  border-radius: 2rem;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+  padding: 0.8rem 1rem;
+  border-radius: 1.5rem;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: box-shadow 0.2s;
   font-size: 1rem;
 }
 
+.input-field:focus {
+  box-shadow: 0 0 8px rgba(100, 100, 255, 0.3);
+  border-color: #74b9ff;
+}
+
 .bubbly-button {
-  background: #ff7e5f;
-  background: linear-gradient(to right, #ff758c, #ff7eb3);
+  background: linear-gradient(135deg, #2193b0, #6dd5ed);
   border: none;
   border-radius: 2rem;
   color: white;
   padding: 0.8rem 2rem;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -52,6 +77,31 @@ body {
 .bubbly-button:hover {
   box-shadow: 0 0 12px rgba(255, 120, 180, 0.4);
   transform: scale(1.05);
+}
+
+.error-message {
+  background: linear-gradient(to right, #ff6a6a, #ff9472);
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 15px rgba(255, 120, 120, 0.3);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  animation: bounceIn 0.4s ease;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .dashboard-body {
@@ -570,12 +620,6 @@ form.mb-4 select:focus {
 
 .ml-2 {
   margin-left: 0.5rem;
-}
-
-.input-field:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.4);
-  transition: box-shadow 0.2s ease-in-out;
 }
 
 .modal {

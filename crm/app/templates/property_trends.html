@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-wrapper fade-in px-4 py-8">
+  <div class="page-title text-center mb-6">🏘️ Property Trends</div>
+
+  <div class="card p-6 rounded-2xl shadow-lg bg-white max-w-2xl mx-auto">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <h2 class="text-lg font-semibold text-gray-700 mb-4 text-align=center">Converted Leads by Property Type</h2>
+    <canvas id="propertyTypeChart" height="200"></canvas>
+  </div>
+</div>
+
+<script>
+  const ctx = document.getElementById('propertyTypeChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ property_type_data.labels | tojson }},
+      datasets: [{
+        data: {{ property_type_data.data | tojson }},
+        backgroundColor: [
+          '#74ebd5', '#ACB6E5', '#FFD166', '#EF476F', '#06D6A0', '#118AB2'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: { enabled: true }
+      }
+    }
+  });
+</script>
+{% endblock %}

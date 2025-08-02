@@ -51,15 +51,15 @@
             <form method="post" action="/admin/agents/update_status" class="inline-form">
               <input type="hidden" name="agent_id" value="{{ agent.id }}">
               <select name="status" onchange="this.form.submit()" class="form-select-sm">
-                <option value="Active" {% if agent.status == 'Active' %}selected{% endif %}>Active</option>
-                <option value="On Hold" {% if agent.status == 'On Hold' %}selected{% endif %}>On Hold</option>
-                <option value="Deactivated" {% if agent.status == 'Deactivated' %}selected{% endif %}>Deactivated</option>
+                <option value="Active" {% if agent.status == 'active' %}selected{% endif %}>Active</option>
+                <option value="On Hold" {% if agent.status == 'hold' %}selected{% endif %}>On Hold</option>
+                <option value="deactivated" {% if agent.status == 'deactivated' %}selected{% endif %}>Deactivated</option>
               </select>
             </form>
           </td>
           <td>
             <a href="/admin/agents/edit/{{ agent.id }}" class="btn btn-sm btn-primary">Edit</a>
-            {% if agent.status == 'Deactivated' %}
+            {% if agent.status == 'deactivated' %}
               <a href="/admin/agents/delete/{{ agent.id }}" class="btn btn-sm btn-danger ml-2">Delete</a>
             {% else %}
               <span class="text-muted ml-2">Deactivate to delete</span>

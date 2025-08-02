@@ -1,6 +1,7 @@
 from app.db import Base
 from datetime import datetime
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime, Boolean, func  # <- Add DateTime here if missing
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -24,3 +25,4 @@ class Lead(Base):
     property_type = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    agent = relationship("User", backref="leads")

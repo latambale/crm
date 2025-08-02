@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="main-wrapper p-6 fade-in">
+  <h2 class="text-2xl font-bold text-center mb-6">🎯 Lead Distribution Campaign</h2>
+
+  <form method="post" action="/campaign/assign" class="bg-white shadow-xl rounded-2xl p-6 space-y-4 max-w-4xl mx-auto">
+    <input type="hidden" name="filename" value="{{ filename }}">
+
+    <!-- Mode Toggle -->
+    <div class="flex justify-center gap-4 mb-4">
+      <label class="flex items-center gap-2">
+        <input type="radio" name="mode" value="count" checked class="accent-indigo-600">
+        <span class="text-sm font-semibold">By Count</span>
+      </label>
+      <label class="flex items-center gap-2">
+        <input type="radio" name="mode" value="percentage" class="accent-indigo-600">
+        <span class="text-sm font-semibold">By Percentage</span>
+      </label>
+    </div>
+
+    <!-- Agent Distribution Inputs -->
+    <div class="grid md:grid-cols-2 gap-4">
+      {% for agent in agents %}
+        <div class="flex items-center justify-between border p-3 rounded-lg shadow-sm bg-gray-50">
+          <div>
+            <div class="font-semibold text-indigo-700">{{ agent.username }}</div>
+            <div class="text-sm text-gray-600">{{ agent.email }}</div>
+          </div>
+          <div>
+            <input
+              type="number"
+              name="agent_{{ agent.id }}"
+              min="0"
+              value="0"
+              step="1"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+              class="input input-sm w-24 border rounded-md text-center shadow-sm"
+              placeholder="0">
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 mt-6 rounded-xl text-lg hover:opacity-90 transition">
+      🚀 Assign Leads
+    </button>
+  </form>
+
+  <!-- Lead Preview -->
+  <div class="mt-10 max-w-4xl mx-auto">
+    <h3 class="text-xl font-semibold mb-2">📋 Uploaded Leads Preview</h3>
+    <div class="overflow-auto rounded-xl shadow">
+      <table class="min-w-full bg-white text-sm border">
+        <thead class="bg-indigo-100 text-indigo-800">
+          <tr>
+            <th class="py-2 px-4 border">Name</th>
+            <th class="py-2 px-4 border">Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in leads %}
+          <tr class="hover:bg-indigo-50 transition">
+            <td class="py-2 px-4 border">{{ lead.Name }}</td>
+            <td class="py-2 px-4 border">{{ lead.Phone }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
