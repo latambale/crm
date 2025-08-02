@@ -17,6 +17,10 @@ router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 
+@router.get("/", response_class=HTMLResponse)
+def homepage(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+
 @router.get("/dashboard")
 def dashboard(request: Request, db: Session = Depends(get_db)):
     user = get_current_user(request, db)
