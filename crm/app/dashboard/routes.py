@@ -12,6 +12,7 @@ from app.db import get_db
 from app.models import User, Lead
 import pandas as pd
 from typing import Optional
+from sqlalchemy import Text
 
 router = APIRouter()
 
@@ -387,3 +388,19 @@ def property_trends(request: Request, db: Session = Depends(get_db)):
         "user": user,
         "property_type_data": property_type_data
     })
+
+@router.post("/add-note/{lead_id}")
+async def add_note(lead_id: int, request: Request, db: Session = Depends(get_db)):
+    user = get_current_user(request, db)
+    if not user or user.role != "agent":
+        return RedirectResponse("/login", status_code=302)
+
+    form = await request.form()
+    note = form.get("note", "").strip()
+
+    lead = db.query(Lead).filter(Lead.id == lead_id, Lead.assigned_to == user.id).first()
+    if lead:
+        lead.notes = note
+        db.commit()
+
+    return RedirectResponse("/my-leads", status_code=302)

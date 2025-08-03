@@ -29,5 +29,20 @@
     </main>
   </div>
 
+
+<script>
+  function openNotePopup(leadId, existingNote = "") {
+    document.getElementById("noteModal").classList.remove("hidden");
+    const noteForm = document.getElementById("noteForm");
+    noteForm.action = `/add-note/${leadId}`;
+    document.getElementById("noteText").value = existingNote.replace(/\\n/g, '\n');
+  }
+
+  function closeNotePopup() {
+    document.getElementById("noteModal").classList.add("hidden");
+  }
+</script>
+
+
 </body>
 </html>

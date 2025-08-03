@@ -21,6 +21,7 @@
             <th>🏢Interest</th>
             <th>👤Assigned Agent</th>
             <th>📋Date Added</th>
+            <th>📝Notes</th>
         </tr>
     </thead>
     <tbody>
@@ -42,6 +43,11 @@
             {% endif %}
             </td>
             <td>{{ lead.created_at.strftime('%d-%b-%Y') }}</td>
+            <td>
+                <div class="p-2 bg-gray-100 rounded-xl text-sm text-gray-800 whitespace-pre-wrap">
+                    {{ lead.notes if lead.notes else "—" }}
+                </div>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
