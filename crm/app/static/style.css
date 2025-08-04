@@ -2,7 +2,6 @@
 :root {
   --primary-color: #4f46e5;
   --light-bg: #f9f9ff;
-  --sidebar-gradient: linear-gradient(to bottom right, #1f2937, #374151);
 }
 
 body {
@@ -436,7 +435,7 @@ canvas {
   top: 0;
   height: 100vh;
   width: 220px;
-  background: var(--sidebar-gradient);
+  background: linear-gradient(to bottom right, #a1c4fd, #c2e9fb);
   color: #fff;
   padding: 2rem 1rem;
   border-top-right-radius: 2rem;
