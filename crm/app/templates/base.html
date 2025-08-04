@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BrokerBuddy</title>
   <link rel="stylesheet" href="/static/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="top-bar transparent">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
     <div class="top-left"><a href="/dashboard" class="brand-link">🏡 BrokerBuddy</a></div>
     <div class="top-right"><a href="/logout" class="logout-button">⬅️ Logout</a></div>
   </div>
@@ -40,6 +42,10 @@
 
   function closeNotePopup() {
     document.getElementById("noteModal").classList.add("hidden");
+  }
+
+  function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('open');
   }
 </script>
 
