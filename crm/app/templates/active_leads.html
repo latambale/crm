@@ -18,8 +18,10 @@
             <th>👤Name</th>
             <th>📞Phone</th>
             <th>⚡Status</th>
+            <th>🏢Interest</th>
             <th>👤Assigned Agent</th>
             <th>📋Date Added</th>
+            <th>📝Notes</th>
         </tr>
     </thead>
     <tbody>
@@ -27,9 +29,25 @@
         <tr>
             <td>{{ lead.name }}</td>
             <td>{{ lead.phone }}</td>
-            <td>{{ lead.status or "waiting" }}</td>
-            <td>{{ lead.assigned_to or "Unassigned" }}</td>
+            <td>{{ lead.status|title or "Needs to be Assigned" }}</td>
+            <td>
+                {% if lead.property_type %}
+                <strong>{{ lead.property_type|title }}</strong>
+                {% else %}
+                <span class="text-gray-500 font-semibold">N/A</span>
+                {% endif %}
+            </td>
+            <td>{% if lead.agent %}<strong>{{ lead.agent.username|title }}</strong>
+            {% else %}
+            <span class="text-gray-500 italic">Unassigned</span>
+            {% endif %}
+            </td>
             <td>{{ lead.created_at.strftime('%d-%b-%Y') }}</td>
+            <td>
+                <div class="p-2 bg-gray-100 rounded-xl text-sm text-gray-800 whitespace-pre-wrap">
+                    {{ lead.notes if lead.notes else "—" }}
+                </div>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

@@ -11,6 +11,7 @@
           <th>📞 Phone</th>
           <th>📌 Status</th>
           <th>⚡ Action</th>
+          <th>📝 Notes</th>
         </tr>
       </thead>
       <tbody>
@@ -27,22 +28,28 @@
           </td>
           <td>
             {% if lead.status != "converted" %}
-            <form method="post" action="/convert-lead/{{ lead.id }}" style="display: flex; flex-direction: row; align-items: center; gap: 1rem;">
-              <div>
-                <select name="property_type" required class="input-field" style="max-width: 180px;">
-                  <option disabled selected>Choose Property</option>
-                  <option value="apartment">🏢 Apartment</option>
-                  <option value="villa">🏠 Villa</option>
-                  <option value="plot">📐 Plot</option>
-                </select>
-              </div>
-              <div>
-                <button type="submit" class="bubbly-button">Convert</button>
-              </div>
+            <form method="post" action="/convert-lead/{{ lead.id }}" style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <select name="property_type" required class="input-field" style="max-width: 160px;">
+                <option disabled selected>Choose Property</option>
+                <option value="apartment">🏢 Apartment</option>
+                <option value="villa">🏠 Villa</option>
+                <option value="plot">📐 Plot</option>
+                <option value="cold">🔴 Lead Turned Cold</option>
+              </select>
+              <button type="submit" class="bubbly-button">Convert</button>
             </form>
-            {% else %}
-              <span style="color: #00b894; font-weight: bold;">Lead Converted</span>
-            {% endif %}
+                {% else %}
+                  {% if lead.property_type == "cold" %}
+                  <span style="color: #d63031; font-weight: bold;">🔴 Lead Went Cold</span>
+                  {% else %}
+                  <span style="color: #00b894; font-weight: bold;">✅ Lead Converted</span>
+                  {% endif %}
+                {% endif %}
+          </td>
+          <td>
+           <a href="#" class="text-blue-600 hover:underline text-sm font-medium" onclick="openNotePopup('{{ lead.id }}', '{{ lead.notes | escape }}')">
+              {% if lead.notes %}✏️ Edit Note{% else %}➕ Add Note{% endif %}
+              </a>
           </td>
         </tr>
         {% endfor %}
@@ -55,4 +62,22 @@
     {% endif %}
   </div>
 </div>
+
+
+
+<!-- Notes Popup Modal -->
+<div id="noteModal" class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center z-50">
+  <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+    <h3 class="text-lg font-semibold mb-2">📝 Add/Edit Note</h3>
+    <form method="post" id="noteForm">
+      <textarea name="note" id="noteText" rows="4" class="w-full p-2 rounded-xl border text-sm resize-none" placeholder="Write a note..."></textarea>
+      <div class="flex justify-end mt-3 gap-3">
+        <button type="button" onclick="closeNotePopup()" class="text-sm text-gray-500 hover:text-red-500">Cancel</button>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-1 rounded-xl text-sm">💾 Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 {% endblock %}

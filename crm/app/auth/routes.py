@@ -18,6 +18,12 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
     db = next(get_db())  # ✅ Fix here
     user = db.query(User).filter_by(username=username, password=password).first()
     if user:
+        if user.status == "deactivated":
+            return templates.TemplateResponse("login.html", {
+                "request": request,
+                "error": "Your account is currently deactivated. Please contact admin."
+            })
+
         request.session["user"] = user.username
         return RedirectResponse(url="/dashboard", status_code=302)
     return templates.TemplateResponse("login.html", {"request": request, "error": "Invalid credentials"})

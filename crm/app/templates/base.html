@@ -16,8 +16,7 @@
     <aside class="sidebar">
       <h2>📊 Menu</h2>
       <ul>
-        <li><a href="#">📈 Trends</a></li>
-        <li><a href="#">🎯 Lead Conversions</a></li>
+        <li><a href="/property-trends" class="sidebar-link">📈 Trends</a></li>
         <li><a href="/dashboard">🏠 Dashboard</a></li>
         <li><a href="/upload-leads">📤 Upload Leads</a></li>
         <li><a href="/active-leads">📋 Active Leads</a></li>
@@ -29,6 +28,21 @@
       {% block content %}{% endblock %}
     </main>
   </div>
+
+
+<script>
+  function openNotePopup(leadId, existingNote = "") {
+    document.getElementById("noteModal").classList.remove("hidden");
+    const noteForm = document.getElementById("noteForm");
+    noteForm.action = `/add-note/${leadId}`;
+    document.getElementById("noteText").value = existingNote.replace(/\\n/g, '\n');
+  }
+
+  function closeNotePopup() {
+    document.getElementById("noteModal").classList.add("hidden");
+  }
+</script>
+
 
 </body>
 </html>

@@ -6,7 +6,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from app.auth.routes import router as auth_router
 from app.dashboard.routes import router as dashboard_router
-from app.upload.routes import router as upload_router
+from app.dashboard.routes import router as upload_router
 from app.models import Lead
 
 

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="main-wrapper fade-in">
+
+  <h2 class="page-title">🎯 Lead Distribution Campaign</h2>
+
+  <form method="post" action="/campaign/assign" class="card space-y-6">
+    <input type="hidden" name="filename" value="{{ filename }}">
+
+    <!-- Toggle: Distribution Mode -->
+    <div class="flex justify-center gap-6">
+      <label class="flex items-center gap-2">
+        <input type="radio" name="mode" value="count" checked class="accent-indigo-600">
+        <span class="text-sm font-medium">📦 By Count</span>
+      </label>
+      <label class="flex items-center gap-2">
+        <input type="radio" name="mode" value="percentage" class="accent-indigo-600">
+        <span class="text-sm font-medium">📊 By Percentage</span>
+      </label>
+    </div>
+
+    <!-- Agent Distribution Inputs -->
+    <div class="grid md:grid-cols-2 gap-5">
+      {% for agent in agents %}
+        <div class="flex items-center justify-between bg-gradient-to-r from-[#f9f9ff] to-[#edf0f7] p-4 rounded-2xl shadow hover:shadow-md transition">
+          <div>
+            <div class="font-semibold text-indigo-700">{{ agent.username }}</div>
+            <div class="text-sm text-gray-600">{{ agent.email }}</div>
+          </div>
+          <input
+            type="number"
+            name="agent_{{ agent.id }}"
+            min="0"
+            value="0"
+            step="1"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            class="input-field w-24 text-center shadow-sm"
+            placeholder="0"
+          >
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center">
+      <button type="submit" class="bubbly-button w-full">
+        🚀 Assign Leads
+      </button>
+    </div>
+  </form>
+
+  <!-- Uploaded Leads Preview -->
+  <div class="mt-10 card">
+    <h3 class="text-xl font-semibold mb-4 text-center text-indigo-800">📋 Uploaded Leads Preview</h3>
+
+    {% if leads %}
+    <div class="table-wrapper">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in leads %}
+          <tr>
+            <td>{{ lead.Name }}</td>
+            <td>{{ lead.Phone }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      No leads found. <a href="/upload">Upload again</a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
