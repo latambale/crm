@@ -1,7 +1,14 @@
 /* app/static/style.css */
+:root {
+  --primary-color: #4f46e5;
+  --light-bg: #f9f9ff;
+  --sidebar-gradient: linear-gradient(to bottom right, #1f2937, #374151);
+}
+
 body {
   margin: 0;
   font-family: 'Quicksand', sans-serif;
+  background: var(--light-bg);
 }
 
 .login-body {
@@ -416,12 +423,20 @@ canvas {
   box-sizing: border-box;
 }
 
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 .sidebar {
   position: sticky;
   top: 0;
   height: 100vh;
   width: 220px;
-  background: linear-gradient(to bottom right, #a1c4fd, #c2e9fb);
+  background: var(--sidebar-gradient);
   color: #fff;
   padding: 2rem 1rem;
   border-top-right-radius: 2rem;
@@ -430,6 +445,7 @@ canvas {
   flex-shrink: 0;
   overflow-y: auto;
   z-index: 999;
+  transition: left 0.3s ease;
 }
 
 
@@ -475,19 +491,26 @@ canvas {
 }
 
 @media (max-width: 768px) {
-  .top-bar.transparent {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .top-right {
-    justify-content: space-between;
-    width: 100%;
+  .menu-toggle {
+    display: block;
   }
 
   .sidebar {
-    display: none; /* or convert to hamburger menu here */
+    position: fixed;
+    left: -240px;
+    top: 0;
+    height: 100%;
+    width: 220px;
+    overflow-y: auto;
+    border-radius: 0;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .layout {
+    flex-direction: column;
   }
 
   .main-wrapper {
@@ -517,10 +540,9 @@ canvas {
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  max-height: 100vh;
-  overflow-y: hidden; /* Remove vertical scrollbar */
+  min-height: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* For the filter form */
