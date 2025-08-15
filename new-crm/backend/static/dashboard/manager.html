@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manager Dashboard</title>
+  <link rel="stylesheet" href="../style.css">
+  <script src="../config.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Manager Dashboard</h2>
+    <div id="dashboardContent">Loading...</div>
+  </div>
+  <script src="../config.js"></script>
+  <script>
+    fetch("/dashboard/manager")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("dashboardContent").innerHTML = `
+          <p><strong>Manage:</strong> ${data.manage.join(", ")}</p>
+          <p><strong>Assigned Leads:</strong> ${data.assigned_leads}</p>
+          <h4>Team Performance</h4>
+          <ul>
+            ${data.team_performance.map(tc => `<li>${tc.name}: ${tc.conversion}</li>`).join("")}
+          </ul>
+        `;
+      });
+  </script>
+</body>
+</html>

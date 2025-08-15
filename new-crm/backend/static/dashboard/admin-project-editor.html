@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Editor</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f9ff; margin:0; padding:2rem; }
+    .wrap { max-width: 900px; margin: 0 auto; background:#fff; border-radius:1.5rem; padding:2rem; box-shadow:0 10px 25px rgba(0,0,0,.08); }
+    h2 { margin-bottom:1rem; color:#5e35b1; }
+    .row { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:1rem; }
+    label { font-weight:600; display:block; margin-top:.75rem; }
+    input[type="text"], select, textarea {
+      width:100%; padding:.7rem .9rem; border-radius:.8rem; border:1px solid #ddd; background:#f7f9ff;
+    }
+    textarea { min-height:90px; }
+    .pill {
+      display:inline-block; padding:.4rem .7rem; background:#eef1ff; border-radius:999px; margin:.25rem .25rem 0 0; font-size:.9rem;
+    }
+    .box { border:1px dashed #cfd6ff; padding:1rem; border-radius:1rem; background:#fbfcff; }
+    .actions { margin-top:1.5rem; display:flex; gap:1rem; }
+    .btn {
+      padding:.8rem 1.2rem; border:none; border-radius:1rem; color:#fff; font-weight:700; cursor:pointer;
+      background: linear-gradient(145deg, #f271c4, #aa52f2);
+    }
+    .btn.outline { background:#fff; color:#5e35b1; border:2px solid #aa52f2; }
+    .muted { color:#666; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h2 id="title">Create Project</h2>
+
+    <!-- Basic (existing Project fields) -->
+    <div class="row">
+      <div>
+        <label>Project Name</label>
+        <input type="text" id="name">
+      </div>
+      <div>
+        <label>Location</label>
+        <input type="text" id="location">
+      </div>
+      <div>
+        <label>Property Type (summary)</label>
+        <input type="text" id="property_type" placeholder="e.g., Mixed, Residential">
+      </div>
+      <div>
+        <label>Budget Range</label>
+        <input type="text" id="budget_range" placeholder="e.g., 50L-80L">
+      </div>
+    </div>
+    <label>Description</label>
+    <textarea id="description" placeholder="Short description"></textarea>
+
+    <hr style="margin:1.2rem 0; border:none; border-top:1px solid #eee;">
+
+    <!-- Extended Info -->
+    <div class="row">
+      <div>
+        <label>Developer Name</label>
+        <input type="text" id="developer_name">
+      </div>
+      <div>
+        <label>Experience</label>
+        <input type="text" id="experience" placeholder="e.g., 10 years">
+      </div>
+      <div>
+        <label>Completed Projects</label>
+        <input type="text" id="completed_projects" placeholder="e.g., 12">
+      </div>
+      <div>
+        <label>Landmark</label>
+        <input type="text" id="landmark" placeholder="Near XYZ Metro...">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Possession Type</label>
+        <select id="possession_type">
+          <option value="">Select</option>
+          <option>NewLaunch</option>
+          <option>Nearing Possession Ready</option>
+          <option>Under Construction</option>
+        </select>
+      </div>
+      <div>
+        <label>Total Land</label>
+        <input type="text" id="total_land" placeholder="e.g., 5 acres">
+      </div>
+      <div>
+        <label>Total Towers</label>
+        <input type="text" id="total_towers" placeholder="e.g., 6">
+      </div>
+      <div>
+        <label>Number of Floors</label>
+        <input type="text" id="number_of_floors" placeholder="e.g., 30">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Construction Technology</label>
+        <select id="construction_technology">
+          <option value="">Select</option>
+          <option>Mivan</option>
+          <option>Hybrid</option>
+          <option>RCC</option>
+        </select>
+      </div>
+      <div>
+        <label>Number of Amenities</label>
+        <input type="text" id="number_of_amenities" placeholder="e.g., 30">
+      </div>
+      <div>
+        <label>No of Flats per Floor</label>
+        <input type="text" id="flats_per_floor" placeholder="e.g., 4/5/6">
+      </div>
+      <div>
+        <label>No of Lifts</label>
+        <input type="text" id="lifts" placeholder="e.g., 3/4/5">
+      </div>
+    </div>
+
+    <div class="box">
+      <label>Types of Inventory (multi-select)</label>
+      <div class="row" style="grid-template-columns: repeat(auto-fit,minmax(160px,1fr));">
+        <label><input type="checkbox" class="inv" value="1BHK"> 1BHK</label>
+        <label><input type="checkbox" class="inv" value="2BHK"> 2BHK</label>
+        <label><input type="checkbox" class="inv" value="3BHK"> 3BHK</label>
+        <label><input type="checkbox" class="inv" value="Commercial Shop"> Commercial Shop</label>
+        <label><input type="checkbox" class="inv" value="Commercial Office Space"> Commercial Office Space</label>
+        <label><input type="checkbox" class="inv" value="Pent House"> Pent House</label>
+        <label><input type="checkbox" class="inv" value="Row House"> Row House</label>
+      </div>
+      <div id="carpetAreas" style="margin-top:1rem;">
+        <span class="muted">Select inventory types to add carpet area inputs.</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="saveProject()">Save Project</button>
+      <button class="btn outline" onclick="goBack()">Cancel</button>
+    </div>
+
+    <p id="status" class="muted" style="margin-top:.8rem;"></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get("project_id"); // if present => edit mode
+    const statusEl = document.getElementById("status");
+
+    const inventoryInputs = document.querySelectorAll(".inv");
+    const carpetAreasDiv = document.getElementById("carpetAreas");
+
+    // re-render carpet area fields when inventory selection changes
+    inventoryInputs.forEach(i => i.addEventListener("change", renderCarpetInputs));
+
+    function renderCarpetInputs(existingMap) {
+      const selected = Array.from(document.querySelectorAll(".inv:checked")).map(i => i.value);
+      carpetAreasDiv.innerHTML = "";
+
+      if (selected.length === 0) {
+        carpetAreasDiv.innerHTML = '<span class="muted">Select inventory types to add carpet area inputs.</span>';
+        return;
+      }
+
+      selected.forEach(type => {
+        const wrap = document.createElement("div");
+        wrap.style.marginBottom = ".6rem";
+        const v = existingMap && existingMap[type] ? existingMap[type] : "";
+        wrap.innerHTML = `
+          <label style="margin:0 0 .25rem 0;">Carpet Area for <span class="pill">${type}</span></label>
+          <input type="text" id="carpet_${cssSafe(type)}" placeholder="e.g., 620-750 sq.ft" value="${v}">
+        `;
+        carpetAreasDiv.appendChild(wrap);
+      });
+    }
+
+    function cssSafe(s) { return s.replace(/\s+/g,'_').replace(/\W/g,'_'); }
+
+    function gatherPayload() {
+      const selectedTypes = Array.from(document.querySelectorAll(".inv:checked")).map(i => i.value);
+      const carpetMap = {};
+      selectedTypes.forEach(type => {
+        const input = document.getElementById("carpet_" + cssSafe(type));
+        carpetMap[type] = (input?.value || "").trim();
+      });
+
+      return {
+        name: document.getElementById("name").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        property_type: document.getElementById("property_type").value.trim(),
+        budget_range: document.getElementById("budget_range").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        info: {
+          developer_name: document.getElementById("developer_name").value.trim(),
+          experience: document.getElementById("experience").value.trim(),
+          completed_projects: document.getElementById("completed_projects").value.trim(),
+          landmark: document.getElementById("landmark").value.trim(),
+          possession_type: document.getElementById("possession_type").value,
+          total_land: document.getElementById("total_land").value.trim(),
+          total_towers: document.getElementById("total_towers").value.trim(),
+          number_of_floors: document.getElementById("number_of_floors").value.trim(),
+          construction_technology: document.getElementById("construction_technology").value,
+          number_of_amenities: document.getElementById("number_of_amenities").value.trim(),
+          types_of_inventory: selectedTypes,
+          carpet_area_json: JSON.stringify(carpetMap),
+          flats_per_floor: document.getElementById("flats_per_floor").value.trim(),
+          lifts: document.getElementById("lifts").value.trim()
+        }
+      };
+    }
+
+    async function loadProject() {
+      if (!projectId) return; // create mode
+      document.getElementById("title").innerText = "Edit Project";
+
+      const res = await fetch(`/admin/project/${projectId}`);
+      if (!res.ok) {
+        statusEl.textContent = "Failed to load project.";
+        return;
+      }
+      const data = await res.json();
+
+      // base
+      document.getElementById("name").value = data.name || "";
+      document.getElementById("location").value = data.location || "";
+      document.getElementById("property_type").value = data.property_type || "";
+      document.getElementById("budget_range").value = data.budget_range || "";
+      document.getElementById("description").value = data.description || "";
+
+      // info
+      const info = data.info || {};
+      document.getElementById("developer_name").value = info.developer_name || "";
+      document.getElementById("experience").value = info.experience || "";
+      document.getElementById("completed_projects").value = info.completed_projects || "";
+      document.getElementById("landmark").value = info.landmark || "";
+      document.getElementById("possession_type").value = info.possession_type || "";
+      document.getElementById("total_land").value = info.total_land || "";
+      document.getElementById("total_towers").value = info.total_towers || "";
+      document.getElementById("number_of_floors").value = info.number_of_floors || "";
+      document.getElementById("construction_technology").value = info.construction_technology || "";
+      document.getElementById("number_of_amenities").value = info.number_of_amenities || "";
+      document.getElementById("flats_per_floor").value = info.flats_per_floor || "";
+      document.getElementById("lifts").value = info.lifts || "";
+
+      // types & carpet areas
+      const types = (info.types_of_inventory || "").split(",").map(s => s.trim()).filter(Boolean);
+      inventoryInputs.forEach(i => { i.checked = types.includes(i.value); });
+
+      let carpet = {};
+      try { carpet = JSON.parse(info.carpet_area_json || "{}"); } catch(e){ carpet = {}; }
+      renderCarpetInputs(carpet);
+    }
+
+    async function saveProject() {
+      const payload = gatherPayload();
+
+      if (!payload.name) { alert("Project Name is required"); return; }
+      if (!payload.location) { alert("Location is required"); return; }
+
+      statusEl.textContent = "Saving...";
+      const url = projectId ? `/admin/project/${projectId}` : `/admin/project`;
+      const method = projectId ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        statusEl.textContent = data.detail || "Failed to save project.";
+        statusEl.style.color = "red";
+        return;
+      }
+      statusEl.style.color = "green";
+      statusEl.textContent = data.message || "Saved!";
+      if (!projectId && data.project_id) {
+        // redirect or switch to edit mode if you want:
+        // window.location.href = `admin-project-editor.html?project_id=${data.project_id}`;
+      }
+    }
+
+    function goBack(){ window.location.href = "admin.html"; }
+
+    // init
+    renderCarpetInputs();
+    loadProject();
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+[
+{
+"id": "f4e0c555566d4fc2",
+"telecaller_id": 3,
+"url": "/uploads/telecaller_3/2025-08-14/f4e0c555566d4fc2.webp",
+"filename": "static/uploads/telecaller_3/2025-08-14/f4e0c555566d4fc2.webp",
+"description": "test",
+"kind": "selfie",
+"mime": "image/webp",
+"size": 26040,
+"created_at": "2025-08-14T00:06:18.830300Z",
+"lat": 18.8190774,
+"lng": 74.3704655
+},
+{
+"id": "671647935cc94378",
+"telecaller_id": 3,
+"url": "/uploads/telecaller_3/2025-08-14/671647935cc94378.jpg",
+"filename": "static/uploads/telecaller_3/2025-08-14/671647935cc94378.jpg",
+"description": "test2",
+"kind": "selfie",
+"mime": "image/jpeg",
+"size": 29431,
+"created_at": "2025-08-14T00:06:50.173393Z",
+"lat": 18.8190774,
+"lng": 74.3704655
+}
+]

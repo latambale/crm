@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Admin Dashboard</h2>
+    <div id="dashboardContent">Loading...</div>
+  </div>
+
+  <script>
+    fetch("http://127.0.0.1:8000/dashboard/admin")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("dashboardContent").innerHTML = `
+          <p><strong>Manage:</strong> ${data.manage.join(", ")}</p>
+          <p><strong>Active Leads:</strong> ${data.leads}</p>
+          <p><strong>Conversion Rate:</strong> ${data.conversion_rate}</p>
+          <h4>Employee Performance</h4>
+          <ul>
+            ${data.employee_performance.map(emp => `<li>${emp.name}: ${emp.conversion}</li>`).join("")}
+          </ul>
+        `;
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #f5d1ff, #c1eaff);
+      --card-gradient: linear-gradient(145deg, #ffffff, #f0f8ff);
+      --button-gradient: linear-gradient(145deg, #f271c4, #aa52f2);
+      --accent-color: #5e35b1;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--primary-gradient);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--button-gradient);
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 1.3rem;
+      margin: 0;
+      text-shadow: 1px 1px 0 #ffffff33;
+    }
+
+    #menuToggle {
+      all: unset;
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: var(--accent-color);
+      color: white;
+      padding: 1.2rem 1rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      transform: translateX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .sidebar a {
+      display: block;
+      text-decoration: none;
+      color: white;
+      background: #6a4cbc;
+      margin-bottom: 0.6rem;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: #7e5be0;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 2rem 1.2rem;
+    }
+
+    .stats-card {
+      background: var(--card-gradient);
+      border-radius: 2rem;
+      padding: 1.5rem;
+      box-shadow: inset 4px 4px 10px #d1d9e6, inset -4px -4px 10px #ffffff;
+      margin-bottom: 2rem;
+    }
+
+    .stats-card p, .stats-card label {
+      font-size: 1rem;
+      margin: 0.6rem 0;
+      color: #333;
+    }
+
+    button {
+      padding: 0.6rem 1.2rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 1rem;
+      background: var(--button-gradient);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    input[type="date"], select {
+      padding: 0.4rem;
+      margin-right: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+
+    @media (max-width: 768px) {
+      #menuToggle {
+        display: block;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .content {
+        margin-left: 0;
+        padding-top: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Admin Dashboard</h1>
+    <button id="menuToggle">☰</button>
+  </header>
+
+  <nav class="sidebar" id="sidebar">
+    <h2>Admin Menu</h2>
+    <a href="admin-managers.html">Manage Managers</a>
+    <a href="admin-upload-leads.html">Upload Leads</a>
+    <a href="admin-upload-projects.html">Upload Projects</a>
+    <a href="admin-project-editor.html">Create/Update Project</a>
+    <a href="/logout" style="background: linear-gradient(145deg, #f271c4, #aa52f2); margin-top: 1.5rem;">Logout</a>
+  </nav>
+
+  <main class="content">
+    <div class="stats-card" id="statGroup1">
+      <p><strong>Leads Uploaded Today:</strong> —</p>
+      <p><strong>Total Leads:</strong> —</p>
+      <p><strong>Assigned Leads:</strong> —</p>
+      <p><strong>Projects Added:</strong> —</p>
+    </div>
+
+    <div class="stats-card" id="statGroup2">
+      <p><strong>Fresh Leads:</strong> —</p>
+      <p><strong>Interested:</strong> —</p>
+      <p><strong>Follow-up:</strong> —</p>
+      <p><strong>Not Interested:</strong> —</p>
+    </div>
+
+    <div class="stats-card" id="statGroup3">
+      <p><strong>Managers:</strong> —</p>
+      <p><strong>Telecallers:</strong> —</p>
+      <p><strong>Site Visits Today:</strong> —</p>
+    </div>
+
+    <div class="stats-card">
+      <h3>📥 Download Reports</h3>
+      <label>Start Date: <input type="date" id="startDate"></label>
+      <label>End Date: <input type="date" id="endDate"></label>
+      <label>
+        Report:
+        <select id="reportType">
+          <option value="calls">📞 Calls Dialed</option>
+          <option value="connected">🔗 Connected Calls</option>
+          <option value="converted">🔥 Converted Leads</option>
+          <option value="sitevisits">📍 Site Visits</option>
+        </select>
+      </label>
+      <div>
+        <button onclick="downloadSelectedReport()">⬇️ Download</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const toggleBtn = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+    });
+
+    async function loadDashboardStats() {
+      const res = await fetch("/admin/dashboard-stats");
+      const stats = await res.json();
+
+      document.getElementById("statGroup1").innerHTML = `
+        <p><strong>Leads Uploaded Today:</strong> ${stats.leads_uploaded_today || 0}</p>
+        <p><strong>Total Leads:</strong> ${stats.total_leads}</p>
+        <p><strong>Assigned Leads:</strong> ${stats.assigned_leads}</p>
+        <p><strong>Projects Added:</strong> ${stats.projects}</p>
+      `;
+
+      document.getElementById("statGroup2").innerHTML = `
+        <p><strong>Fresh Leads:</strong> ${stats.stage_counts?.fresh || 0}</p>
+        <p><strong>Interested:</strong> ${stats.stage_counts?.hot || 0}</p>
+        <p><strong>Follow-up:</strong> ${stats.stage_counts?.svs || 0}</p>
+        <p><strong>Not Interested:</strong> ${stats.stage_counts?.cold || 0}</p>
+      `;
+
+      document.getElementById("statGroup3").innerHTML = `
+        <p><strong>Managers:</strong> ${stats.managers}</p>
+        <p><strong>Telecallers:</strong> ${stats.telecallers}</p>
+        <p><strong>Site Visits Today:</strong> ${stats.site_visits_today}</p>
+      `;
+    }
+
+    function downloadSelectedReport() {
+      const start = document.getElementById("startDate").value;
+      const end = document.getElementById("endDate").value;
+      const report = document.getElementById("reportType").value;
+
+      if (!start || !end) {
+        alert("Please select both start and end dates.");
+        return;
+      }
+
+      const url = `/admin/report/${report}?start=${start}&end=${end}`;
+      window.open(url, "_blank");
+    }
+
+    loadDashboardStats();
+  </script>
+</body>
+</html>

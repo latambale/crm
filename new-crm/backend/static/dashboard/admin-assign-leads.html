@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assign Leads</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f5d1ff, #c1eaff);
+      --card-gradient: linear-gradient(145deg, #ffffff, #f0f8ff);
+      --button-gradient: linear-gradient(145deg, #f271c4, #aa52f2);
+      --accent-color: #5e35b1;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--button-gradient);
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 1.3rem;
+      margin: 0;
+      text-shadow: 1px 1px 0 #ffffff33;
+    }
+
+    #menuToggle {
+      all: unset;
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: var(--accent-color);
+      color: white;
+      padding: 1.2rem 1rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      transform: translateX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .sidebar a {
+      display: block;
+      text-decoration: none;
+      color: white;
+      background: #6a4cbc;
+      margin-bottom: 0.6rem;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: #7e5be0;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 2rem 1rem;
+    }
+
+    .assign-container {
+      max-width: 800px;
+      margin: auto;
+      background: var(--card-gradient);
+      padding: 2rem;
+      border-radius: 2rem;
+      box-shadow: inset 4px 4px 10px #d1d9e6, inset -4px -4px 10px #ffffff;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #6a1b9a;
+      font-size: 1.4rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #5e35b1;
+    }
+
+    select, input[type="number"] {
+      padding: 0.9rem 1.1rem;
+      margin-top: 0.5rem;
+      border-radius: 1.5rem;
+      border: none;
+      background: #f0f4ff;
+      box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #ffffff;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .user-list {
+      margin-top: 1.5rem;
+    }
+
+    .user-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 1.5rem;
+      background: white;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-row span {
+      flex: 1;
+      font-weight: 600;
+      color: #5e35b1;
+      font-size: 0.95rem;
+    }
+
+    .user-row input,
+    .user-row select {
+      width: 120px;
+      padding: 0.7rem 1rem;
+      border-radius: 1.5rem;
+      border: none;
+      background: #f0f4ff;
+      font-size: 0.95rem;
+      box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #ffffff;
+    }
+
+    button {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: var(--button-gradient);
+      color: white;
+      border: none;
+      border-radius: 2rem;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .status {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      #menuToggle {
+        display: block;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .content {
+        margin-left: 0;
+        padding-top: 1.5rem;
+      }
+
+      .user-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .user-row input, .user-row select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔝 Header -->
+  <header>
+    <h1>Assign Leads</h1>
+    <button id="menuToggle">☰</button>
+  </header>
+
+  <!-- 📋 Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <h2 style="color: white;">Admin Menu</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="admin-managers.html">Manage Managers</a>
+    <a href="admin-upload-leads.html">Upload Leads</a>
+    <a href="admin-upload-projects.html">Upload Projects</a>
+    <a href="/logout" style="background: linear-gradient(145deg, #f271c4, #aa52f2); margin-top: 1.5rem;">Logout</a>
+  </nav>
+
+  <!-- 📦 Main Content -->
+  <main class="content">
+    <div class="assign-container">
+      <h2>Assign Uploaded Leads</h2>
+
+      <label for="roleSelect">Assign to:</label>
+      <select id="roleSelect" onchange="loadUsers()">
+        <option value="manager">Managers</option>
+        <option value="telecaller">Telecallers</option>
+      </select>
+
+      <div class="user-list" id="userList">Loading users...</div>
+
+      <button onclick="assignLeads()">Assign Leads</button>
+
+      <p class="status" id="assignStatus"></p>
+    </div>
+  </main>
+
+  <!-- 🧠 Script -->
+  <script>
+    const toggleBtn = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const batchId = urlParams.get("batch_id");
+    let users = [];
+
+    async function loadUsers() {
+      const role = document.getElementById("roleSelect").value;
+      const res = await fetch(`/admin/users?role=${role}`);
+      users = await res.json();
+
+      const container = document.getElementById("userList");
+      container.innerHTML = "";
+
+      if (users.length === 0) {
+        container.innerHTML = "No users found.";
+        return;
+      }
+
+      users.forEach(user => {
+        const row = document.createElement("div");
+        row.className = "user-row";
+        row.innerHTML = `
+          <span>${user.phone}</span>
+          <input type="number" placeholder="Value" id="user-${user.id}">
+          <select id="type-${user.id}">
+            <option value="count">Count</option>
+            <option value="percentage">%</option>
+          </select>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function assignLeads() {
+      const role = document.getElementById("roleSelect").value;
+      const assignments = [];
+
+      users.forEach(user => {
+        const valueInput = document.getElementById(`user-${user.id}`);
+        const typeSelect = document.getElementById(`type-${user.id}`);
+        const value = parseInt(valueInput.value);
+
+        if (value > 0) {
+          assignments.push({
+            user_id: user.id,
+            value: value,
+            type: typeSelect.value
+          });
+        }
+      });
+
+      if (assignments.length === 0) {
+        alert("Please enter at least one valid assignment value.");
+        return;
+      }
+
+      const res = await fetch("/admin/assign-leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          batch_id: batchId,
+          role: role,
+          assignments: assignments
+        })
+      });
+
+      const data = await res.json();
+      const status = document.getElementById("assignStatus");
+
+      if (res.ok) {
+        status.innerText = data.message;
+        status.style.color = "green";
+      } else {
+        status.innerText = data.detail || "Assignment failed.";
+        status.style.color = "red";
+      }
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>

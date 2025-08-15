@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Suggested Projects</title>
+  <script src="../config.js"></script>
+  <style>
+    /* 🎨 Base UI theme (mobile optimized) */
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5d1ff, #c1eaff);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+    }
+
+    .dashboard {
+      background: linear-gradient(145deg, #ffffff, #f0f8ff);
+      border-radius: 2rem;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #5e35b1;
+      text-shadow: 1px 1px 0 #ffffff;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 📦 Filter section */
+    #filterSection {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: #f0f4ff;
+      padding: 1rem;
+      border-radius: 1.5rem;
+      box-shadow: inset 4px 4px 10px #d1d9e6, inset -4px -4px 10px #ffffff;
+      margin-bottom: 2rem;
+    }
+
+    #filterSection select {
+      margin-top: 5px;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 1.5rem;
+      background: #fff;
+      font-size: 1rem;
+      appearance: none;
+      -webkit-appearance: none;
+      box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #ffffff;
+    }
+
+    #filterSection label {
+      flex: 1 1 100%;
+      display: flex;
+      flex-direction: column;
+      font-weight: 500;
+      color: #333;
+    }
+
+    #filterSection input {
+      margin-top: 5px;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 1.5rem;
+      background: #fff;
+      box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #ffffff;
+      font-size: 1rem;
+    }
+
+    #filterSection button {
+      flex: 1 1 100%;
+      margin-top: 1rem;
+      padding: 1rem;
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(145deg, #f271c4, #aa52f2);
+      border: none;
+      border-radius: 2rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #filterSection button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 🗂️ Projects Grid */
+    #projectList {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* 🧾 Individual Project Card */
+    .card {
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1),
+                  -4px -4px 12px rgba(255, 255, 255, 0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h3 {
+      color: #6a1b9a;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+
+    .card button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.2rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(145deg, #f271c4, #aa52f2);
+      border: none;
+      border-radius: 2rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    .card button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card details summary {
+      cursor: pointer;
+      margin-top: .5rem;
+      color: #5e35b1;
+      font-weight: 600;
+    }
+
+    .details-grid {
+      margin-top: .5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: .5rem 1rem;
+      font-size: .92rem;
+    }
+
+    /* 📅 Modal Styling (Mobile Optimized, Soft 3D UI) */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, #ffffff, #f0f8ff);
+      padding: 1.8rem 1.2rem;
+      border-radius: 2rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      text-align: left;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 1rem;
+      color: #6a1b9a;
+      font-size: 1.3rem;
+      text-align: center;
+      text-shadow: 1px 1px 0 #ffffff;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 1.5rem;
+      background: #f0f4ff;
+      font-size: 1rem;
+      box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #ffffff;
+      resize: none;
+    }
+
+    .modal-content textarea { min-height: 100px; }
+
+    .modal-content .actions {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .modal-content button {
+      flex: 1;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(145deg, #f271c4, #aa52f2);
+      border: none;
+      border-radius: 2rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .modal-content button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    @media (max-width: 480px) {
+      .modal-content { padding: 1.5rem 1rem; }
+      .modal-content h3 { font-size: 1.2rem; }
+      .modal-content input,
+      .modal-content textarea { font-size: 0.95rem; padding: 0.75rem 1rem; }
+      .modal-content button { font-size: 0.95rem; padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Suggested Projects</h2>
+
+    <div id="filterSection">
+      <label>Property Type:
+        <select id="typeFilter">
+          <option value="">-- Select --</option>
+          <option>1BHK</option>
+          <option>2BHK</option>
+          <option>3BHK</option>
+          <option>Commercial Shop</option>
+          <option>Commercial Office Space</option>
+          <option>Plot</option>
+          <option>Re-Sell Property</option>
+        </select>
+      </label>
+      <label>Budget:
+        <select id="budgetFilter">
+          <option value="">-- Select --</option>
+          <option>Below 50 LAKHS</option>
+          <option>50L-60L</option>
+          <option>60L-70L</option>
+          <option>1CR-1.15CR</option>
+          <option>1.15-2.25</option>
+          <option>1.25-1.40</option>
+          <option>1.40-1.60</option>
+          <option>1.60-2CR</option>
+          <option>2-2.5</option>
+          <option>2.5-3.5CR</option>
+          <option>3.5 onwards</option>
+        </select>
+      </label>
+      <label>Location:
+        <select id="locationFilter">
+          <option value="">-- Select --</option>
+          <option>Wakad</option>
+          <option>Baner</option>
+          <option>Kothrud</option>
+          <option>Viman Nagar</option>
+          <option>Hinjewadi</option>
+          <option>Kharadi</option>
+          <option>Pimpri</option>
+          <option>Chinchwad</option>
+          <option>Hadapsar</option>
+          <option>Koregaon Park</option>
+        </select>
+      </label>
+      <button onclick="applyFilters()">Apply Filters</button>
+    </div>
+
+    <div id="projectList">Loading...</div>
+  </div>
+
+  <!-- 📅 Modal for scheduling SVS -->
+  <div class="modal" id="svsModal">
+    <div class="modal-content">
+      <h3>Schedule Site Visit</h3>
+      <input type="datetime-local" id="visitDate" />
+      <textarea id="visitNotes" placeholder="Any notes or preferences?"></textarea>
+      <div class="actions">
+        <button onclick="submitSVS()">Submit</button>
+        <button onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params       = new URLSearchParams(window.location.search);
+    const leadId       = params.get("leadId");
+    const leadIndex    = parseInt(params.get("leadIndex"))   || 0;
+    const telecallerId = parseInt(params.get("telecallerId"))|| 3;
+
+    let allProjects = [];
+    let displayList = [];
+    let selectedProjectId = null;
+
+    // Normalize backend project to old UI shape (keeps your existing filters & render)
+    function mapProject(p) {
+      if (!p || typeof p !== 'object') return {
+        id: 0, name: '', type: '', budget: '', location: '', desc: '', _info: {}
+      };
+
+      const info = p.info && typeof p.info === 'object' ? p.info : {};
+
+      return {
+        id: p.id ?? 0,
+        name: p.name ?? "",
+        type: p.property_type ?? "",     // used by filters
+        budget: p.budget_range ?? "",    // used by filters
+        location: p.location ?? "",      // used by filters
+        desc: p.description ?? "",
+        _info: {
+          developer_name: info.developer_name ?? "",
+          experience: info.experience ?? "",
+          completed_projects: info.completed_projects ?? "",
+          landmark: info.landmark ?? "",
+          possession_type: info.possession_type ?? "",
+          total_land: info.total_land ?? "",
+          total_towers: info.total_towers ?? "",
+          number_of_floors: info.number_of_floors ?? "",
+          construction_technology: info.construction_technology ?? "",
+          number_of_amenities: info.number_of_amenities ?? "",
+          types_of_inventory: Array.isArray(info.types_of_inventory)
+            ? info.types_of_inventory : (info.types_of_inventory ? String(info.types_of_inventory).split(",") : []),
+          carpet_area: (info.carpet_area && typeof info.carpet_area === 'object') ? info.carpet_area : {},
+          flats_per_floor: info.flats_per_floor ?? "",
+          lifts: info.lifts ?? ""
+        }
+      };
+    }
+
+
+    async function fetchSuggestedOrAll() {
+      // Try suggestions first (filtered by lead details)
+      try {
+        if (leadId && leadId !== "null" && leadId !== "undefined") {
+          const r = await fetch(`/projects/suggestions/${leadId}`);
+          if (r.ok) {
+            const data = await r.json();
+            // Handle both shapes:
+            // A) { projects: [...] }
+            if (data && Array.isArray(data.projects)) {
+              return data.projects.map(mapProject);
+            }
+            // B) [...] (older shape)
+            if (Array.isArray(data)) {
+              return data.map(mapProject);
+            }
+          }
+        }
+      } catch (_) { /* ignore and fall back */ }
+
+      // Fallback: all projects
+      try {
+        const allRes = await fetch("/projects");
+        if (allRes.ok) {
+          const list = await allRes.json();
+          return Array.isArray(list) ? list.map(mapProject) : [];
+        }
+      } catch (_) {}
+
+  return [];
+}
+
+
+    async function fetchLeadDetails() {
+      const leadRes = await fetch(`/lead-details/${leadId}`);
+      if (!leadRes.ok) return null;
+      return await leadRes.json();
+    }
+
+    async function fetchAllProjects() {
+      allProjects = await fetchSuggestedOrAll();
+      await autoApplyLeadFilters();
+    }
+
+    async function autoApplyLeadFilters() {
+      let lead = null;
+      try {
+        if (leadId && leadId !== "null" && leadId !== "undefined") {
+          const leadRes = await fetch(`/lead-details/${leadId}`);
+          if (leadRes.ok) lead = await leadRes.json();
+        }
+      } catch (_) {}
+
+      if (!lead) {
+        renderProjects(allProjects, true);
+        return;
+      }
+
+      // Keep your original auto filter logic against normalized fields:
+      displayList = allProjects.filter(p =>
+        (!lead.looking_for || p.type === lead.looking_for) &&
+        (!lead.budget || p.budget === lead.budget) &&
+        (!lead.location_preference || p.location === lead.location_preference)
+      );
+
+      renderProjects(displayList.length ? displayList : allProjects, displayList.length === 0);
+    }
+
+    function applyFilters() {
+      const type   = (document.getElementById("typeFilter").value || "").toLowerCase();
+      const budget = (document.getElementById("budgetFilter").value || "").toLowerCase();
+      const loc    = (document.getElementById("locationFilter").value || "").toLowerCase();
+
+      displayList = allProjects.filter(p =>
+        p.type.toLowerCase().includes(type) &&
+        p.budget.toLowerCase().includes(budget) &&
+        p.location.toLowerCase().includes(loc)
+      );
+
+      renderProjects(displayList, false);
+    }
+
+    function renderProjects(list, showingAll) {
+      const c = document.getElementById("projectList");
+      if (!list || list.length === 0) {
+        c.innerHTML = "<p>No projects match these filters.</p>";
+        return;
+      }
+
+      c.innerHTML =
+        (showingAll ? "<p><em>No exact match – listing all projects.</em></p>" : "") +
+        list.map(p => {
+          const info = p._info || {};
+          const inv = Array.isArray(info.types_of_inventory) ? info.types_of_inventory.join(", ") : (info.types_of_inventory || "");
+          const carpet = info.carpet_area || {};
+          const carpetList = Object.keys(carpet).length
+            ? `<ul style="margin:.25rem 0 0 .9rem;">${
+                 Object.entries(carpet).map(([k,v]) => `<li><strong>${k}</strong>: ${v}</li>`).join("")
+               }</ul>`
+            : "";
+
+          return `
+            <div class="card">
+              <h3>${p.name}</h3>
+              <p><strong>Type:</strong> ${p.type || "-"}</p>
+              <p><strong>Budget:</strong> ${p.budget || "-"}</p>
+              <p><strong>Location:</strong> ${p.location || "-"}</p>
+              <p>${p.desc || ""}</p>
+
+              <details>
+                <summary>More details</summary>
+                <div class="details-grid">
+                  <p><strong>Developer:</strong> ${info.developer_name || "-"}</p>
+                  <p><strong>Experience:</strong> ${info.experience || "-"}</p>
+                  <p><strong>Completed:</strong> ${info.completed_projects || "-"}</p>
+                  <p><strong>Landmark:</strong> ${info.landmark || "-"}</p>
+                  <p><strong>Possession:</strong> ${info.possession_type || "-"}</p>
+                  <p><strong>Total Land:</strong> ${info.total_land || "-"}</p>
+                  <p><strong>Towers:</strong> ${info.total_towers || "-"}</p>
+                  <p><strong>Floors:</strong> ${info.number_of_floors || "-"}</p>
+                  <p><strong>Technology:</strong> ${info.construction_technology || "-"}</p>
+                  <p><strong>Amenities:</strong> ${info.number_of_amenities || "-"}</p>
+                  <p><strong>Inventory:</strong> ${inv || "-"}</p>
+                </div>
+                ${carpetList}
+                <div class="details-grid" style="margin-top:.5rem;">
+                  <p><strong>Flats/Floor:</strong> ${info.flats_per_floor || "-"}</p>
+                  <p><strong>Lifts:</strong> ${info.lifts || "-"}</p>
+                </div>
+              </details>
+
+              <button onclick="openModal(${p.id})">📍 Schedule Site Visit</button>
+            </div>`;
+        }).join("");
+    }
+
+    function openModal(projectId) {
+      selectedProjectId = projectId;
+      document.getElementById("visitDate").value = "";
+      document.getElementById("visitNotes").value = "";
+      document.getElementById("svsModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      selectedProjectId = null;
+      document.getElementById("svsModal").style.display = "none";
+    }
+
+    function submitSVS() {
+      const date  = document.getElementById("visitDate").value;
+      const notes = document.getElementById("visitNotes").value;
+
+      if (!date) {
+        alert("Please select a date and time.");
+        return;
+      }
+
+      fetch("/sitevisit", {
+        method : "POST",
+        headers: { "Content-Type": "application/json" },
+        body   : JSON.stringify({ lead_id: leadId, project_id: selectedProjectId, date, notes })
+      })
+      .then(r => {
+        if (!r.ok) {
+          alert("Failed to schedule site visit.");
+          return;
+        }
+        alert("Site Visit Scheduled!");
+        closeModal();
+        window.location.href =
+          `telecaller.html?leadIndex=${leadIndex + 1}&telecallerId=${telecallerId}`;
+      });
+    }
+
+    // Init (no top-level await)
+    (async function init() {
+      document.getElementById("projectList").innerHTML = "Loading...";
+      await fetchAllProjects();
+    })();
+  </script>
+</body>
+</html>

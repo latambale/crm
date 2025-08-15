@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Info Form</title>
+  <script src="../config.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5d1ff, #c1eaff);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+    }
+
+    .form-container {
+      background: linear-gradient(145deg, #ffffff, #f0f8ff);
+      border-radius: 2rem;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      font-size: 1.6rem;
+      color: #5e35b1;
+      margin-bottom: 1.5rem;
+      text-shadow: 1px 1px 0 #ffffff;
+    }
+
+    .progress-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 8px;
+      width: 100%;
+      background: #e0e0e0;
+      border-top-left-radius: 2rem;
+      border-top-right-radius: 2rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f271c4, #aa52f2);
+      transition: width 0.4s ease;
+    }
+
+    form input,
+    form textarea,
+    form select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 1.5rem;
+      box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      background: #f0f4ff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    form input:focus,
+    form textarea:focus,
+    form select:focus {
+      outline: none;
+      box-shadow: inset 2px 2px 6px #b3b3b3, inset -2px -2px 6px #ffffff;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(145deg, #f271c4, #aa52f2);
+      border: none;
+      border-radius: 2rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 380px) {
+      .form-container {
+        padding: 1.5rem 1rem;
+      }
+
+      form input,
+      form textarea,
+      form select {
+        font-size: 0.95rem;
+        padding: 0.75rem 1rem;
+      }
+
+      button {
+        font-size: 1rem;
+        padding: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div class="progress-wrapper">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <h2>Lead Information</h2>
+    <form id="leadForm">
+      <select id="looking_for">
+        <option value="">Looking for</option>
+        <option>1BHK</option>
+        <option>2BHK</option>
+        <option>3BHK</option>
+        <option>Commercial Shop</option>
+        <option>Commercial Office Space</option>
+        <option>Plot</option>
+        <option>Re-Sell Property</option>
+      </select>
+
+
+      <select id="budget">
+        <option value="">Budget</option>
+        <option>Below 50 LAKHS</option>
+        <option>50L-60L</option>
+        <option>60L-70L</option>
+        <option>1CR-1.15CR</option>
+        <option>1.15-2.25</option>
+        <option>1.25-1.40</option>
+        <option>1.40-1.60</option>
+        <option>1.60-2CR</option>
+        <option>2-2.5</option>
+        <option>2.5-3.5CR</option>
+        <option>3.5 onwards</option>
+      </select>
+
+      <select id="location_preference">
+        <option value="">Location Preference</option>
+        <option>Wakad</option>
+        <option>Baner</option>
+        <option>Kothrud</option>
+        <option>Viman Nagar</option>
+        <option>Hinjewadi</option>
+        <option>Kharadi</option>
+        <option>Pimpri</option>
+        <option>Chinchwad</option>
+        <option>Hadapsar</option>
+        <option>Koregaon Park</option>
+      </select>
+
+      <select id="possession_time">
+        <option value="">Tentative Possession</option>
+        <option>New Launch (Up to 3 Years)</option>
+        <option>Under Construction (Up to 2-2.5 Years)</option>
+        <option>Near Possession (1-1.5 Years)</option>
+        <option>Ready Possession (0-6 Months)</option>
+      </select>
+
+      <input type="text" id="work_location" placeholder="Your Work Location" />
+      <input type="text" id="spouse_work_location" placeholder="Spouse Work Location" />
+      <input type="text" id="current_residence" placeholder="Currently Living At" />
+      <textarea id="remarks" placeholder="Remarks" rows="3"></textarea>
+      <select id="stage">
+        <option value="hot">Interested</option>
+        <option value="followup">Follow-up</option>
+        <option value="cold">Not Interested Right Now</option>
+      </select>
+      <button type="submit">Save & View Projects</button>
+    </form>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const leadId = params.get('leadId');
+    const leadIndex = parseInt(params.get('leadIndex')) || 0;
+    const telecallerId = parseInt(params.get('telecallerId')) || 3;
+
+    const formFields = [
+      "looking_for", "budget", "location_preference", "possession_time",
+      "work_location", "spouse_work_location", "current_residence", "remarks", "stage"
+    ];
+
+    const progressBar = document.getElementById("progressBar");
+
+    function updateProgressBar() {
+      let filled = 0;
+      formFields.forEach(id => {
+        const val = document.getElementById(id).value.trim();
+        if (val !== "") filled++;
+      });
+      const percent = Math.round((filled / formFields.length) * 100);
+      progressBar.style.width = percent + "%";
+    }
+
+    formFields.forEach(id => {
+      document.getElementById(id).addEventListener("input", updateProgressBar);
+    });
+
+    document.getElementById("leadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        lead_id: leadId,
+        looking_for: document.getElementById("looking_for").value,
+        budget: document.getElementById("budget").value,
+        location_preference: document.getElementById("location_preference").value,
+        possession_time: document.getElementById("possession_time").value,
+        work_location: document.getElementById("work_location").value,
+        spouse_work_location: document.getElementById("spouse_work_location").value,
+        current_residence: document.getElementById("current_residence").value,
+        remarks: document.getElementById("remarks").value,
+        stage: document.getElementById("stage").value
+      };
+
+      const res = await fetch("/telecaller/save-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        window.location.href = `suggested_projects.html?leadId=${leadId}&leadIndex=${leadIndex}&telecallerId=${telecallerId}`;
+      }
+    });
+
+    updateProgressBar();
+  </script>
+</body>
+</html>

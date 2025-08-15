@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Projects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #f5d1ff, #c1eaff);
+      --card-gradient: linear-gradient(145deg, #ffffff, #f0f8ff);
+      --button-gradient: linear-gradient(145deg, #f271c4, #aa52f2);
+      --accent-color: #5e35b1;
+      --success-gradient: linear-gradient(145deg, #f271c4, #aa52f2);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--primary-gradient);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--button-gradient);
+      color: white;
+      padding: 1rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 1.3rem;
+      margin: 0;
+      text-shadow: 1px 1px 0 #ffffff33;
+    }
+
+    #menuToggle {
+      all: unset;
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: var(--accent-color);
+      color: white;
+      padding: 1.2rem 1rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      transform: translateX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .sidebar a {
+      display: block;
+      text-decoration: none;
+      color: white;
+      background: #6a4cbc;
+      margin-bottom: 0.6rem;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: #7e5be0;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 2rem 1rem;
+    }
+
+    .upload-container {
+      max-width: 600px;
+      margin: auto;
+      background: var(--card-gradient);
+      padding: 2rem;
+      border-radius: 2rem;
+      box-shadow: inset 4px 4px 10px #d1d9e6, inset -4px -4px 10px #ffffff;
+      text-align: center;
+    }
+
+    .upload-container h2 {
+      font-size: 1.5rem;
+      color: #6a1b9a;
+      margin-bottom: 1rem;
+    }
+
+    .upload-container p {
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+
+    input[type="file"] {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 1rem;
+      background: #f0f4ff;
+      border: none;
+      font-size: 0.95rem;
+      box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #ffffff;
+    }
+
+    progress {
+      width: 100%;
+      height: 20px;
+      margin-top: 1rem;
+      display: none;
+      border-radius: 1rem;
+      overflow: hidden;
+      background: #eee;
+    }
+
+    progress::-webkit-progress-bar {
+      background: #eee;
+      border-radius: 1rem;
+    }
+
+    progress::-webkit-progress-value {
+      background: var(--success-gradient);
+      border-radius: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background: var(--button-gradient);
+      border: none;
+      border-radius: 2rem;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      color: #6a1b9a;
+      background: #fff0ff;
+      border-radius: 1rem;
+      padding: 0.8rem;
+      box-shadow: inset 1px 1px 4px #e5cfff, inset -1px -1px 4px #ffffff;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      #menuToggle {
+        display: block;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .content {
+        margin-left: 0;
+        padding-top: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔝 Header -->
+  <header>
+    <h1>Upload Projects</h1>
+    <button id="menuToggle">☰</button>
+  </header>
+
+  <!-- 📋 Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <h2>Admin Menu</h2>
+    <a href="admin.html">Dashboard</a>
+    <a href="admin-managers.html">Manage Managers</a>
+    <a href="admin-upload-leads.html">Upload Leads</a>
+    <a href="admin-upload-projects.html">Upload Projects</a>
+    <a href="/logout" style="background: linear-gradient(145deg, #f271c4, #aa52f2); margin-top: 1.5rem;">Logout</a>
+  </nav>
+
+  <!-- 📦 Main Content -->
+  <main class="content">
+    <div class="upload-container">
+      <h2>Upload Projects (Excel)</h2>
+      <input type="file" id="excelFile" accept=".xlsx">
+      <br>
+      <button onclick="uploadProjects()">Upload Projects</button>
+      <progress id="progressBar" value="0" max="100"></progress>
+      <p id="status"></p>
+      <div class="note">
+        ⚠️ Please make sure your Excel file has only these columns with headers: <strong>Columns: Name, Location, Property Type, Budget Range, Description.</strong>
+      </div>
+    </div>
+  </main>
+
+  <!-- 🧠 Scripts -->
+  <script>
+    const toggleBtn = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+    });
+
+    async function uploadProjects() {
+      const fileInput = document.getElementById("excelFile");
+      const file = fileInput.files[0];
+      const progress = document.getElementById("progressBar");
+      const status = document.getElementById("status");
+
+      if (!file) return alert("Please select an Excel file.");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      progress.style.display = "block";
+      progress.value = 30;
+
+      const res = await fetch("/admin/upload-projects", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      progress.value = 100;
+
+      if (res.ok) {
+        status.innerText = data.message;
+        status.style.color = "green";
+      } else {
+        status.innerText = data.detail || "Upload failed.";
+        status.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>

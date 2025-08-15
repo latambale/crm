@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Telecaller Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5d1ff, #c1eaff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .dashboard {
+      background: linear-gradient(145deg, #ffffff, #f0f8ff);
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      position: relative;
+    }
+
+    .dashboard h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #5e35b1;
+      text-shadow: 1px 1px 0 #ffffff;
+    }
+
+    .progress-info {
+      margin-bottom: 1.5rem;
+      color: #6a1b9a;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    #leadContainer {
+      background: #f0f4ff;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: inset 4px 4px 10px #d1d9e6, inset -4px -4px 10px #ffffff;
+      font-size: 1rem;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    #leadContainer h3 {
+      color: #6a1b9a;
+      margin-bottom: 1rem;
+    }
+
+    #leadContainer p {
+      margin: 0.5rem 0;
+    }
+
+    #leadContainer a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(145deg, #f271c4, #aa52f2);
+      text-decoration: none;
+      border-radius: 2rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #leadContainer a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    #leadContainer a:active {
+      transform: scale(0.96);
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #e0cfff;
+      border-top: 5px solid #aa52f2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 40px auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .modal-content h3 {
+      color: #6a1b9a;
+      margin-bottom: 1rem;
+    }
+
+    .modal-content textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 1.5rem;
+      box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #ffffff;
+      resize: none;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .actions button {
+      flex: 1;
+      padding: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(145deg, #f271c4, #aa52f2);
+      border: none;
+      border-radius: 2rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .actions button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Telecaller Dashboard</h2>
+    <div class="progress-info" id="progressTracker">Loading leads...</div>
+    <div id="leadContainer"><div class="spinner"></div></div>
+  </div>
+  <!-- 📞 Custom Modal for Call Connection -->
+  <div id="callModal" class="modal">
+    <div class="modal-content">
+      <h3>Did the call connect?</h3>
+      <div class="actions">
+        <button onclick="handleCallResponse(true)">Yes</button>
+        <button onclick="showReasonInput()">No</button>
+      </div>
+      <div id="reasonContainer" style="display: none; margin-top: 1rem;">
+        <textarea id="disconnectReason" placeholder="Enter reason..."></textarea>
+        <div class="actions" style="margin-top: 1rem;">
+          <button onclick="submitNoConnection()">Submit</button>
+          <button onclick="closeCallModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let leads = [];
+
+    const urlParams     = new URLSearchParams(window.location.search);
+    let currentIndex    = parseInt(urlParams.get("leadIndex")) || 0;
+    const telecallerId  = parseInt(urlParams.get("telecallerId")) || 3;
+
+    async function loadLeads() {
+      const res = await fetch(`http://127.0.0.1:8000/telecaller/leads/${telecallerId}`);
+      leads = await res.json();
+
+      if (leads.length === 0) {
+        document.getElementById("progressTracker").innerText = "";
+        document.getElementById("leadContainer").innerHTML = "No fresh leads assigned.";
+        return;
+      }
+
+      if (currentIndex >= leads.length) {
+        document.getElementById("progressTracker").innerText = "";
+        document.getElementById("leadContainer").innerHTML = "🎉 Hurray! All leads have been contacted!";
+        return;
+      }
+
+      showLead(leads[currentIndex]);
+    }
+
+    function showLead(lead) {
+      document.getElementById("progressTracker").innerText = `Lead ${currentIndex + 1} of ${leads.length}`;
+      document.getElementById("leadContainer").innerHTML = `
+        <h3>Next Lead</h3>
+        <p><strong>Name:</strong> ${lead.name}</p>
+        <p><strong>Phone:</strong> ${lead.phone}</p>
+        <a href="tel:${lead.phone}" onclick="onCallStarted()">📞 Start Call</a>
+      `;
+    }
+
+    function onCallStarted() {
+      setTimeout(() => {
+        document.getElementById("callModal").style.display = "flex";
+      }, 5000);
+    }
+
+    function handleCallResponse(connected) {
+      if (connected) {
+        window.location.href =
+          `lead_info_form.html?leadId=${leads[currentIndex].id}` +
+          `&leadIndex=${currentIndex}&telecallerId=${telecallerId}`;
+      }
+    }
+
+    function showReasonInput() {
+      document.getElementById("reasonContainer").style.display = "block";
+    }
+
+    function submitNoConnection() {
+      const reason = document.getElementById("disconnectReason").value.trim();
+      if (!reason) {
+        alert("Please provide a reason.");
+        return;
+      }
+
+      // TODO: send `reason` to backend if needed
+      closeCallModal();
+      nextLead();
+    }
+
+    function closeCallModal() {
+      document.getElementById("callModal").style.display = "none";
+      document.getElementById("disconnectReason").value = "";
+      document.getElementById("reasonContainer").style.display = "none";
+    }
+
+    function nextLead() {
+      currentIndex++;
+      if (currentIndex >= leads.length) {
+        document.getElementById("progressTracker").innerText = "";
+        document.getElementById("leadContainer").innerHTML = "🎉 Hurray! All leads have been contacted!";
+        return;
+      }
+      showLead(leads[currentIndex]);
+    }
+
+    loadLeads();
+  </script>
+</body>
+</html>
